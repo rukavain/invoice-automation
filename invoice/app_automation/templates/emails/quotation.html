@@ -1,0 +1,203 @@
+<div
+  style="
+    font-family: sans-serif;
+    color: #4b5563;
+    background-color: white;
+    margin: 0.5rem;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+  "
+>
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: 0.25rem;
+        max-width: 250px;
+      "
+    >
+      <p style="font-size: 1.25rem; margin: 0">GeoPro Global Solutions Inc.</p>
+      <p style="font-size: 0.75rem; margin: 0">
+        Unit No. 204, 2nd Floor KACC Philmade Building, Lot 1 & 2 corner Jose
+        Abad Santos Avenue and E. Quirino st.,
+      </p>
+      <p style="font-size: 0.75rem; margin: 0">
+        Clark Freeport Zone, Philippines
+      </p>
+    </div>
+    <div>
+      <img
+        src="https://geoproglobal.com/logo.png"
+        alt="Logo"
+        height="100"
+        style="min-width: 100px; min-height: 100px"
+      />
+    </div>
+  </div>
+
+  <p
+    style="
+      text-align: right;
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 3.5rem 0;
+    "
+  >
+    QUOTE
+  </p>
+
+  <div
+    style="
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <p style="font-weight: 600; align-self: start; margin-bottom: 0.75rem">
+      Bill to:
+    </p>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: start;
+          align-items: start;
+          gap: 0.25rem;
+        "
+      >
+        <p style="font-size: 1.25rem; margin: 0">{{customer_name}}</p>
+        <p style="margin: 0">{{ customer_address }}</p>
+      </div>
+      <div
+        style="
+          display: flex;
+          text-align: right;
+          justify-content: start;
+          align-items: start;
+          gap: 2.5rem;
+        "
+      >
+        <div style="font-weight: bold; font-size: 0.875rem">
+          <p style="margin: 0">Quote #</p>
+          <p style="margin: 0.75rem 0">Quote date</p>
+          <p style="margin: 0">Due date</p>
+        </div>
+        <div style="font-size: 0.875rem">
+          <p style="margin: 0">{{ quote_number }}</p>
+          <p style="margin: 0.75rem 0">{{ quote_date }}</p>
+          <p style="margin: 0">{{ due_date }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem">
+    <table style="width: 100%; border-collapse: collapse">
+      <thead>
+        <tr
+          style="
+            text-align: left;
+            background-color: #60a5fa;
+            color: white;
+            font-size: 1.25rem;
+          "
+        >
+          <th style="padding: 0.5rem">QTY</th>
+          <th style="padding: 0.5rem">Description</th>
+          <th style="padding: 0.5rem">Unit Price</th>
+          <th style="padding: 0.5rem">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td style="padding: 0.5rem">{{ item.quantity }}</td>
+          <td style="padding: 0.5rem">{{ item.description }}</td>
+          <td style="padding: 0.5rem">{{ item.unit_price }}</td>
+          <td style="padding: 0.5rem">{{ item.amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <hr style="width: 100%; margin: 1rem 0" />
+
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        justify-content: end;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: flex-end;
+          width: 100%;
+          max-width: 400px;
+        "
+      >
+        <p style="margin: 0">Subtotal</p>
+        <p style="margin: 0">{{subtotal}}</p>
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: flex-end;
+          width: 100%;
+          max-width: 400px;
+          margin: 0.5rem 0;
+        "
+      >
+        <p style="margin: 0">Sales Tax (12%)</p>
+        <p style="margin: 0">{{tax}}</p>
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          align-self: flex-end;
+          width: 100%;
+          max-width: 400px;
+          border-top: 2px solid #000;
+          border-bottom: 2px solid #000;
+          padding: 1rem 0;
+          font-weight: bold;
+        "
+      >
+        <p style="margin: 0">Total</p>
+        <p style="margin: 0">{{total}}</p>
+      </div>
+    </div>
+  </div>
+</div>
