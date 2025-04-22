@@ -7,50 +7,39 @@
     padding: 2rem;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 900px;
     margin: auto;
   "
 >
-  <div
+  <img
+    src="https://geoproglobal.com/logo.png"
+    alt="Logo"
+    height="100"
     style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
+      position: absolute;
+      min-width: 100px;
+      min-height: 100px;
+      margin-bottom: 10px;
     "
-  >
-    <div
-      style="
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        align-items: start;
-        gap: 0.25rem;
-        max-width: 250px;
-      "
-    >
-      <p style="font-size: 1.25rem; margin: 0">GeoPro Global Solutions Inc.</p>
-      <p style="font-size: 0.75rem; margin: 0">
+  />
+  <div>
+    <div style="max-width: 300px; max-height: min-content">
+      <p style="font-size: 1.25rem; margin: 0; max-width: max-content">
+        GeoPro Global Solutions Inc.
+      </p>
+      <p style="font-size: 0.75rem; margin: 0; max-width: max-content">
         Unit No. 204, 2nd Floor KACC Philmade Building, Lot 1 & 2 corner Jose
         Abad Santos Avenue and E. Quirino st.,
       </p>
-      <p style="font-size: 0.75rem; margin: 0">
+      <p style="font-size: 0.75rem; margin: 0; max-width: max-content">
         Clark Freeport Zone, Philippines
       </p>
-    </div>
-    <div>
-      <img
-        src="https://geoproglobal.com/logo.png"
-        alt="Logo"
-        height="100"
-        style="min-width: 100px; min-height: 100px"
-      />
     </div>
   </div>
 
   <p
     style="
-      text-align: right;
+      text-align: left;
       font-size: 3rem;
       font-weight: bold;
       margin: 3.5rem 0;
@@ -59,56 +48,36 @@
     QUOTE
   </p>
 
-  <div
-    style="
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    "
-  >
-    <p style="font-weight: 600; align-self: start; margin-bottom: 0.75rem">
-      Bill to:
-    </p>
-    <div
+  <div style="width: 100%">
+    <p
       style="
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        font-weight: 600;
+        align-self: start;
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
       "
     >
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: start;
-          align-items: start;
-          gap: 0.25rem;
-        "
-      >
+      Bill to:
+    </p>
+    <div style="width: 100%; display: block">
+      <div>
         <p style="font-size: 1.25rem; margin: 0">{{customer_name}}</p>
         <p style="margin: 0">{{ customer_address }}</p>
       </div>
-      <div
-        style="
-          display: flex;
-          text-align: right;
-          justify-content: start;
-          align-items: start;
-          gap: 2.5rem;
-        "
-      >
-        <div style="font-weight: bold; font-size: 0.875rem">
-          <p style="margin: 0">Quote #</p>
-          <p style="margin: 0.75rem 0">Quote date</p>
-          <p style="margin: 0">Due date</p>
-        </div>
+      <div>
         <div style="font-size: 0.875rem">
-          <p style="margin: 0">{{ quote_number }}</p>
-          <p style="margin: 0.75rem 0">{{ quote_date }}</p>
-          <p style="margin: 0">{{ due_date }}</p>
+          <div style="margin: 10px 0">
+            <p style="margin: 0; font-weight: bold">Quote #</p>
+            <p style="margin: 0; font-size: 0.875rem">{{ quote_number }}</p>
+          </div>
+          <div style="margin: 10px 0">
+            <p style="margin: 0; font-weight: bold">Quote date</p>
+            <p style="margin: 0; font-size: 0.875rem">{{ quote_date }}</p>
+          </div>
+          <div style="margin: 10px 0">
+            <p style="margin: 0; font-weight: bold">Due date</p>
+            <p style="margin: 0; font-size: 0.875rem">{{ due_date }}</p>
+          </div>
         </div>
       </div>
     </div>
