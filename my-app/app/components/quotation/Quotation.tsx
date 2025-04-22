@@ -1,21 +1,40 @@
 // app/quotation/page.tsx or pages/quotation.tsx
 "use client";
+import "../../../products.json";
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+};
 
-const products = [
-  { id: 1, name: "Product A", price: 50 },
-  { id: 2, name: "Product B", price: 75 },
-  { id: 3, name: "Product C", price: 100 },
-];
-
+type FormProduct = {
+  id: number;
+  quantity: number;
+};
 export default function QuotationForm() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
-    products: [] as { id: number; quantity: number }[],
+    products: [] as FormProduct[],
   });
+
+  useEffect(() => {
+    fetch("/products.json")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Loaded data:", data); // debug
+        const formatted = data.result.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          price: item["Sales Price"],
+        }));
+        setProducts(formatted);
+      });
+  }, []);
 
   const handleProductChange = (id: number, quantity: number) => {
     setFormData((prev) => {
