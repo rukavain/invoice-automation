@@ -128,6 +128,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+'DIRS': [BASE_DIR / 'templates'] # type: ignore
 
 try:
     from .local_settings import *
