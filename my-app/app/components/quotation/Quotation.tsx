@@ -37,8 +37,9 @@ export default function QuotationForm() {
         const formatted = data.result.map((item: any) => ({
           id: item.id,
           name: item.name,
-          image: item.image,
+          image: item.Image,
           price: item["Sales Price"],
+          description: item["Sales Description"],
         }));
         setProducts(formatted);
       });
@@ -105,19 +106,35 @@ export default function QuotationForm() {
       <div>
         <p className="font-bold mb-2">Select Products</p>
         {products.map((product) => (
-          <div key={product.id}>
-            <label>
-              {product.name} (₱{product.price}){product.image}
-            </label>
-            <input
-              type="number"
-              min={0}
-              placeholder="Qty"
-              className="border ml-2 w-16"
-              onChange={(e) =>
-                handleProductChange(product.id, parseInt(e.target.value) || 0)
-              }
+          <div
+            key={product.id}
+            className="flex items-start gap-4 p-2 border rounded mb-2"
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-20 h-20 object-cover rounded border"
             />
+            <div className="flex-1">
+              <p className="font-semibold">{product.name}</p>
+              <p className="text-gray-600">₱{product.price}</p>
+              {product.description && (
+                <p className="text-sm text-gray-500 mt-1">
+                  {product.description}
+                </p>
+              )}
+            </div>
+            <div>
+              <input
+                type="number"
+                min={0}
+                placeholder="Qty"
+                className="border w-16 p-1"
+                onChange={(e) =>
+                  handleProductChange(product.id, parseInt(e.target.value) || 0)
+                }
+              />
+            </div>
           </div>
         ))}
       </div>
