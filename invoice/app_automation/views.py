@@ -24,7 +24,7 @@ class QuotationRequestView(APIView):
 
         if serializer.is_valid():
             data = serializer.validated_data
-            product_name = data['product_name']
+            product_name = data['name']
             email = data['email']
             message = data.get('message', '')
             products = data['products']
@@ -58,7 +58,7 @@ class QuotationRequestView(APIView):
 
             # Build context for the HTML email
             context = {
-                'customer_name': name,
+                'customer_name': data['name'],
                 'customer_address': data.get('address', 'N/A'),
                 'quote_number': f"Q{datetime.now().strftime('%Y%m%d%H%M%S')}",
                 'quote_date': datetime.now().strftime('%B %d, %Y'),
