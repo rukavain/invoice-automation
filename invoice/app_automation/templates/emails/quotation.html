@@ -62,7 +62,7 @@
     <div style="width: 100%; display: block">
       <div>
         <p style="font-size: 1.25rem; margin: 0">{{customer_name}}</p>
-        <p style="margin: 0">{{ customer_address }}</p>
+        <!-- <p style="margin: 0">{{ customer_address }}</p> -->
       </div>
       <div>
         <div style="font-size: 0.875rem">
@@ -95,18 +95,16 @@
           "
         >
           <th style="padding: 0.5rem">QTY</th>
-          <th style="padding: 0.5rem">Description</th>
-          <th style="padding: 0.5rem">Unit Price</th>
-          <th style="padding: 0.5rem">Amount</th>
+          <th style="padding: 0.5rem">Name</th>
+          <th style="padding: 0.5rem">Price</th>
         </tr>
       </thead>
       <tbody>
         {% for item in items %}
         <tr>
           <td style="padding: 0.5rem">{{ item.quantity }}</td>
-          <td style="padding: 0.5rem">{{ item.description }}</td>
+          <td style="padding: 0.5rem">{{ item.name }}</td>
           <td style="padding: 0.5rem">{{ item.unit_price }}</td>
-          <td style="padding: 0.5rem">{{ item.amount }}</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -7,12 +7,19 @@ type Product = {
   id: number;
   name: string;
   price: number;
+  image: string;
+  description?: string;
 };
 
 type FormProduct = {
   id: number;
   quantity: number;
+  product_name: string;
+  price: number;
+  description: string;
+  image: string;
 };
+
 export default function QuotationForm() {
   const [products, setProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
@@ -26,10 +33,11 @@ export default function QuotationForm() {
     fetch("/products.json")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Loaded data:", data); // debug
+        console.log("Loaded data:", data);
         const formatted = data.result.map((item: any) => ({
           id: item.id,
           name: item.name,
+          image: item.image,
           price: item["Sales Price"],
         }));
         setProducts(formatted);
@@ -37,13 +45,23 @@ export default function QuotationForm() {
   }, []);
 
   const handleProductChange = (id: number, quantity: number) => {
+    const selected = products.find((p) => p.id === id);
+    if (!selected) return;
+
     setFormData((prev) => {
-      const existing = prev.products.find((p) => p.id === id);
-      let newProducts = prev.products.filter((p) => p.id !== id);
-      if (quantity > 0) {
-        newProducts.push({ id, quantity });
-      }
-      return { ...prev, products: newProducts };
+      const filtered = prev.products.filter((p) => p.id !== id);
+      const newProduct = {
+        id: selected.id,
+        quantity,
+        product_name: selected.name,
+        price: selected.price,
+        description: selected.description || "",
+        image: selected.image || "",
+      };
+      return {
+        ...prev,
+        products: quantity > 0 ? [...filtered, newProduct] : filtered,
+      };
     });
   };
 
@@ -89,7 +107,7 @@ export default function QuotationForm() {
         {products.map((product) => (
           <div key={product.id}>
             <label>
-              {product.name} (₱{product.price})
+              {product.name} (₱{product.price}){product.image}
             </label>
             <input
               type="number"

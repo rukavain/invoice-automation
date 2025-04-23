@@ -20,9 +20,11 @@ def send_quotation_email(to_email, context):
 class QuotationRequestView(APIView):
     def post(self, request):
         serializer = QuotationRequestSerializer(data=request.data)
+        print(request.data)
+
         if serializer.is_valid():
             data = serializer.validated_data
-            name = data['name']
+            product_name = data['product_name']
             email = data['email']
             message = data.get('message', '')
             products = data['products']
@@ -30,20 +32,26 @@ class QuotationRequestView(APIView):
             # Prepare item data for the HTML table
             items = []
             subtotal = 0
+            print(products)
 
             for p in products:
-                quantity = p['quantity']
-                description = p.get('description', f"Product {p['id']}")
-                unit_price = float(p.get('unit_price', 0))
+                quantity = p.get('quantity', 1)
+                product_name = p.get('product_name', 'N/A')
+                unit_price = float(p.get('price', 0))
                 amount = quantity * unit_price
                 subtotal += amount
 
                 items.append({
                     'quantity': quantity,
-                    'description': description,
+                    'name': product_name,
                     'unit_price': f"₱{unit_price:,.2f}",
                     'amount': f"₱{amount:,.2f}",
+                    'description': p.get('description', ''),
+                    'image': p.get('image', '')
                 })
+
+
+
 
             tax = subtotal * 0.12
             total = subtotal + tax
@@ -65,4 +73,6 @@ class QuotationRequestView(APIView):
 
             return Response({'message': 'Quotation sent successfully!'}, status=status.HTTP_200_OK)
         
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
