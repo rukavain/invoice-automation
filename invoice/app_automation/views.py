@@ -53,8 +53,7 @@ class QuotationRequestView(APIView):
 
 
 
-            tax = subtotal * 0.12
-            total = subtotal + tax
+            total = subtotal
 
             # Build context for the HTML email
             context = {
@@ -64,8 +63,6 @@ class QuotationRequestView(APIView):
                 'quote_date': datetime.now().strftime('%B %d, %Y'),
                 'due_date': (datetime.now() + timedelta(days=7)).strftime('%B %d, %Y'),
                 'items': items,
-                'subtotal': f"₱{subtotal:,.2f}",
-                'tax': f"₱{tax:,.2f}",
                 'total': f"₱{total:,.2f}",
             }
 
