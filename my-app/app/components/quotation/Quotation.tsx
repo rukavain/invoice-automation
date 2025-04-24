@@ -22,12 +22,14 @@ export default function QuotationForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const res = await fetch("http://localhost:8000/api/quotation/send/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/quotation/send/`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }
+    );
 
     if (res.ok) {
       alert("Quotation submitted!");
