@@ -10,11 +10,14 @@ export type Product = {
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/products.json")
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/products.json");
+        const data = await res.json();
         const formatted = data.result.map((item: any) => ({
           id: item.id,
           name: item.name,
@@ -23,8 +26,16 @@ export function useProducts() {
           description: item["Sales Description"],
         }));
         setProducts(formatted);
-      });
+      } catch (err: any) {
+        setError("Failed to load products");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  return products;
+  return { products, loading, error };
 }

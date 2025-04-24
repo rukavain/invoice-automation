@@ -1,69 +1,20 @@
-// app/quotation/page.tsx or pages/quotation.tsx
 "use client";
 import "../../../products.json";
-import { useState, useEffect } from "react";
-
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description?: string;
-};
-
-type FormProduct = {
-  id: number;
-  quantity: number;
-  product_name: string;
-  price: number;
-  description: string;
-  image: string;
-};
+import { useState } from "react";
+import { useProducts } from "@/app/hooks/useProducts";
 
 export default function QuotationForm() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { products, loading, error } = useProducts();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
-    products: [] as FormProduct[],
+    products: [],
   });
-
-  useEffect(() => {
-    fetch("/products.json")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Loaded data:", data);
-        const formatted = data.result.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          image: item.Image,
-          price: item["Sales Price"],
-          description: item["Sales Description"],
-        }));
-        setProducts(formatted);
-      });
-  }, []);
 
   const handleProductChange = (id: number, quantity: number) => {
     const selected = products.find((p) => p.id === id);
     if (!selected) return;
-
-    setFormData((prev) => {
-      const filtered = prev.products.filter((p) => p.id !== id);
-      const newProduct = {
-        id: selected.id,
-        quantity,
-        product_name: selected.name,
-        price: selected.price,
-        description: selected.description || "",
-        image: selected.image || "",
-      };
-      return {
-        ...prev,
-        products: quantity > 0 ? [...filtered, newProduct] : filtered,
-      };
-    });
   };
 
   const handleSubmit = async (e: any) => {
@@ -81,7 +32,8 @@ export default function QuotationForm() {
       alert("Failed to submit");
     }
   };
-
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4">
       <input
