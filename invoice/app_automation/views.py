@@ -50,9 +50,6 @@ class QuotationRequestView(APIView):
                     'image': p.get('image', '')
                 })
 
-
-
-
             total = subtotal
 
             # Build context for the HTML email

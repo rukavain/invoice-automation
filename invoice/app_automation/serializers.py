@@ -8,8 +8,6 @@ class ProductSerializer(serializers.Serializer):
     image = serializers.CharField(required=False, allow_blank=True)
     quantity = serializers.IntegerField()
 
-
-
 class QuotationRequestSerializer(serializers.Serializer):
     name = serializers.CharField()
     email = serializers.EmailField()

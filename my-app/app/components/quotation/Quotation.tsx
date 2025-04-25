@@ -6,7 +6,6 @@ import Image from "next/image";
 
 export default function QuotationForm() {
   const { products, loading, error } = useProducts();
-  const [isOpen, setIsOpen] = useState(false);
   const [qty, setQty] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
@@ -23,67 +22,53 @@ export default function QuotationForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/quotation/send/`,
+      `api/quotation-email`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       }
     );
-
     if (res.ok) {
       alert("Quotation submitted!");
     } else {
       alert("Failed to submit");
     }
   };
+  
   if (loading) return <p>Loading products...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4 w-full">
-      <div className="fixed bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
-        <p
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex justify-between items-center cursor-pointer"
-        >
-          <span>Form</span>
-          <span>{isOpen && "X"}</span>
-        </p>
-        {isOpen && (
-          <div>
-            <input
-              type="text"
-              placeholder="Name"
-              className="border p-2 w-full "
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="border p-2 w-full "
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              required
-            />
-            <textarea
-              placeholder="Message"
-              className="border p-2 w-full "
-              onChange={(e) =>
-                setFormData({ ...formData, message: e.target.value })
-              }
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded"
-            >
-              Submit
-            </button>
-          </div>
-        )}
+      <div className=" bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
+        <div>
+          <input
+            type="text"
+            placeholder="Name"
+            className="border p-2 w-full "
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="border p-2 w-full "
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            required
+          />
+          <textarea
+            placeholder="Message"
+            className="border p-2 w-full "
+            onChange={(e) =>
+              setFormData({ ...formData, message: e.target.value })
+            }
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+            Submit
+          </button>
+        </div>
       </div>
 
       <div className="mt-18">
