@@ -21,27 +21,27 @@ export default function QuotationForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const res = await fetch(
-      `api/quotation-email`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      }
-    );
+    const res = await fetch(`/api/quotation-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
     if (res.ok) {
       alert("Quotation submitted!");
     } else {
       alert("Failed to submit");
     }
   };
-  
+
   if (loading) return <p>Loading products...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
   return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-4 w-full">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 space-y-4 w-full border border-red-600 flex"
+    >
       <div className=" bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
-        <div>
+        <div className="max-w-96 w-full border h-full">
           <input
             type="text"
             placeholder="Name"
@@ -65,9 +65,6 @@ export default function QuotationForm() {
               setFormData({ ...formData, message: e.target.value })
             }
           />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Submit
-          </button>
         </div>
       </div>
 
@@ -93,10 +90,6 @@ export default function QuotationForm() {
               <div className="w-full text-center border">
                 <p className="font-semibold truncate">{product.name}</p>
                 <p className="text-gray-600">₱{product.price}</p>
-                {/* Optional description */}
-                {/* <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-        {product.description}
-      </p> */}
               </div>
 
               <div>
@@ -116,6 +109,9 @@ export default function QuotationForm() {
             </div>
           ))}
         </div>
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+          Submit
+        </button>
       </div>
     </form>
   );

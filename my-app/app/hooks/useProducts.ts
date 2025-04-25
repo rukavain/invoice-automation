@@ -16,7 +16,7 @@ export function useProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/products.json");
+        const res = await fetch("/api/products/");
         const data = await res.json();
         const formatted = data.result.map((item: any) => ({
           id: item.id,
