@@ -80,33 +80,44 @@ export default function QuotationForm() {
     }
   };
 
-  if (loading) return <p>Loading products...</p>;
+  if (loading)
+    return (
+      <div className=" bg-white  w-svw h-svh flex justify-center items-center flex-col gap-4">
+        <div className="flex flex-col justify-center items-center">
+          <div className="flex justify-center items-center gap-4 ">
+            <Image
+              src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
+              alt="Easemart Logo"
+              width={300}
+              height={300}
+            />
+          </div>
+          <Image width={100} height={100} alt="Loading" src={"/loading.gif"} />
+        </div>
+      </div>
+    );
   if (error) return <p className="text-red-500">{error}</p>;
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 space-y-4 w-full border border-red-600 flex"
-    >
+    <form onSubmit={handleSubmit} className="p-4 space-y-4 w-full flex">
       <div className="mt-18">
         <p className="font-bold mb-2">Select Products</p>
-        <div className="flex flex-wrap gap-2 justify-start items-start">
+        <div className="flex flex-wrap justify-start items-start">
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col justify-between items-center gap-4 p-2 border rounded mb-2 w-full max-w-2xs h-[390px]" // fixed height
+              className="flex flex-col justify-between items-center gap-4  border border-gray-300 rounded  w-full max-w-xs h-[390px]" // fixed height
             >
-              <div className="h-44 w-44">
+              <div className="h-64 w-64 border">
                 <Image
                   src={product.image}
                   alt={product.name}
                   width={150}
                   height={150}
-                  className="border border-red-600 object-fit h-full w-full"
+                  className="object-fit h-full w-full"
                 />
               </div>
 
-              {/* Product Info */}
-              <div className="w-full text-center border">
+              <div className="w-full text-left border">
                 <p className="font-semibold truncate">{product.name}</p>
                 <p className="text-gray-600">₱{product.price}</p>
               </div>

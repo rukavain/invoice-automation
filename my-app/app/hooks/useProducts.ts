@@ -18,6 +18,7 @@ export function useProducts() {
       try {
         const res = await fetch("/api/products/");
         const data = await res.json();
+
         const formatted = data.result.map((item: any) => ({
           id: item.id,
           name: item.name,
