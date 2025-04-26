@@ -27,6 +27,7 @@ export async function POST(req: Request) {
 
     const items = [];
     let subtotal = 0;
+    console.log(products, "products");
 
     for (const p of products) {
       const quantity = p.quantity;
@@ -48,7 +49,6 @@ export async function POST(req: Request) {
         image: p.image || "",
       });
     }
-
     const total = subtotal;
     const now = new Date();
     const quoteNumber = `Q${now
@@ -104,6 +104,9 @@ export async function POST(req: Request) {
           <p style="font-weight: 600; margin-bottom: 0.75rem; font-size: 1.25rem;">Bill to:</p>
           <div>
             <p style="font-size: 1.25rem; margin: 0">${name}</p>
+          </div>
+          <div>
+            <p style="font-size: 1.25rem; margin: 0">note: ${message}</p>
           </div>
           <div style="font-size: 0.875rem">
             <div style="margin: 10px 0">

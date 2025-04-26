@@ -1,13 +1,28 @@
 "use client";
-import "../../../products.json";
 import { useState } from "react";
 import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
 
+type FormProduct = {
+  id: number;
+  quantity: number;
+  product_name: string;
+  price: number;
+  description?: string;
+  image: string;
+};
+
+type FormData = {
+  name: string;
+  email: string;
+  message: string;
+  products: FormProduct[];
+};
+
 export default function QuotationForm() {
   const { products, loading, error } = useProducts();
   const [qty, setQty] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     message: "",
@@ -17,6 +32,38 @@ export default function QuotationForm() {
   const handleProductChange = (id: number, quantity: number) => {
     const selected = products.find((p) => p.id === id);
     if (!selected) return;
+
+    setFormData((prevFormData) => {
+      const existingProductIndex = prevFormData.products.findIndex(
+        (p: any) => p.id === id
+      );
+
+      let updatedProducts;
+
+      if (existingProductIndex !== -1) {
+        // Update quantity if product already exists
+        updatedProducts = [...prevFormData.products];
+        updatedProducts[existingProductIndex] = {
+          ...updatedProducts[existingProductIndex],
+          quantity,
+        };
+      } else {
+        // Add new product if it doesn't exist
+        updatedProducts = [
+          ...prevFormData.products,
+          {
+            id: selected.id,
+            quantity,
+            product_name: selected.name,
+            price: selected.price,
+            description: selected.description,
+            image: selected.image,
+          },
+        ];
+      }
+
+      return { ...prevFormData, products: updatedProducts };
+    });
   };
 
   const handleSubmit = async (e: any) => {
@@ -40,34 +87,6 @@ export default function QuotationForm() {
       onSubmit={handleSubmit}
       className="p-4 space-y-4 w-full border border-red-600 flex"
     >
-      <div className=" bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
-        <div className="max-w-96 w-full border h-full">
-          <input
-            type="text"
-            placeholder="Name"
-            className="border p-2 w-full "
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 w-full "
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
-          />
-          <textarea
-            placeholder="Message"
-            className="border p-2 w-full "
-            onChange={(e) =>
-              setFormData({ ...formData, message: e.target.value })
-            }
-          />
-        </div>
-      </div>
-
       <div className="mt-18">
         <p className="font-bold mb-2">Select Products</p>
         <div className="flex flex-wrap gap-2 justify-start items-start">
@@ -109,9 +128,41 @@ export default function QuotationForm() {
             </div>
           ))}
         </div>
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Submit
-        </button>
+        <div className="  bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
+          <div className="min-w-[300px] border h-full">
+            <input
+              type="text"
+              placeholder="Name"
+              className="border p-2 w-full "
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className="border p-2 w-full "
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
+            />
+            <textarea
+              placeholder="Message"
+              className="border p-2 w-full "
+              onChange={(e) =>
+                setFormData({ ...formData, message: e.target.value })
+              }
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );
