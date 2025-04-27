@@ -2,6 +2,14 @@
 import { useState } from "react";
 import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type FormProduct = {
   id: number;
@@ -84,15 +92,15 @@ export default function QuotationForm() {
 
   if (loading)
     return (
-      <div className=" bg-white w-svw h-svh flex justify-center items-center flex-col gap-4">
-        <div className="flex absolute bg-white w-svw h-svh flex-col justify-center items-center">
+      <div className=" bg-white h-full w-full flex justify-center items-center flex-col gap-4">
+        <div className="flex bg-white flex-col justify-center items-center">
           <div className="flex justify-center items-center gap-4 ">
-            <Image
+            {/* <Image
               src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
               alt="Easemart Logo"
               width={300}
               height={300}
-            />
+            /> */}
           </div>
           <Image width={100} height={100} alt="Loading" src={"/loading.gif"} />
         </div>
@@ -100,11 +108,31 @@ export default function QuotationForm() {
     );
   if (error) return <p className="text-red-500">{error}</p>;
   return (
-    <form onSubmit={handleSubmit} className=" w-full flex">
-      <div className="fixed bottom-0 right-0  bg-white rounded-lg p-2 shadow-lg gap-2 flex flex-col justify-start items-start w-full max-w-md">
-        <p onClick={() => setOpen(!open)}>Form</p>
-        {open && (
+    <form onSubmit={handleSubmit} className="relative  w-full flex">
+      <div
+        onClick={() => setOpen(!open)}
+        className="py-4 px-4 fixed bottom-12 right-12 flex justify-center items-center cursor-pointer  rounded-full bg-blue-500 "
+      >
+        <svg
+          className="w-8 h-8 text-white dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="50"
+          height="50"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 6a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a3 3 0 0 1-3 3H5a1 1 0 1 0 0 2h1a5 5 0 0 0 5-5V8a2 2 0 0 0-2-2H6Zm9 0a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a3 3 0 0 1-3 3h-1a1 1 0 1 0 0 2h1a5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+      {open && (
+        <div className="fixed border-2 border-gray-400 bottom-4 right-4  bg-white rounded-lg p-5 shadow-xl gap-2 flex flex-col justify-start items-start w-full max-w-md">
           <div className="min-w-[300px] h-full focus:outline-none">
+            <p className="font-semibold text-xl mb-4">Submit Quotation</p>
             <input
               type="text"
               placeholder="Name"
@@ -130,15 +158,24 @@ export default function QuotationForm() {
                 setFormData({ ...formData, message: e.target.value })
               }
             />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded"
-            >
-              Submit
-            </button>
+            <div className="">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 cursor-pointer rounded"
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                onClick={() => setOpen(!open)}
+                className="bg-gray-200 mx-2 cursor-pointer p-2 rounded"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="">
         {/* <p className="font-semibold text-xl">Products</p> */}
         <div className="flex flex-wrap justify-start items-start gap-3">
@@ -147,16 +184,29 @@ export default function QuotationForm() {
               key={product.id}
               className="flex shadow-lg flex-col justify-between items-center gap-4  border border-gray-300 rounded-lg  w-full max-w-xs h-[390px]" // fixed height
             >
-              <div className="h-64 w-full ">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={150}
-                  height={150}
-                  className="object-scale-down h-full w-full"
-                />
-              </div>
-
+              <Dialog>
+                <DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                  <div className="h-64 w-full cursor-pointer">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      width={150}
+                      height={150}
+                      className="object-scale-down h-full w-full"
+                    />
+                  </div>
+                </DialogTrigger>
+              </Dialog>
               <div className="w-full flex-col justify-start items-start gap-5 p-2">
                 {/* <div className="flex justify-between items-center">
                   <p className="font-semibold truncate">{product.name}</p>
