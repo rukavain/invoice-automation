@@ -30,7 +30,9 @@ type FormData = {
 
 export default function QuotationForm() {
   const { products, loading, error } = useProducts();
-  const [qty, setQty] = useState(0);
+  const [quantities, setQuantities] = useState<{ [productId: number]: number }>(
+    {}
+  );
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -38,6 +40,11 @@ export default function QuotationForm() {
     message: "",
     products: [],
   });
+
+  const handleQuantityChange = (id: number, newQuantity: number) => {
+    setQuantities((prev) => ({ ...prev, [id]: newQuantity }));
+    handleProductChange(id, newQuantity);
+  };
 
   const handleProductChange = (id: number, quantity: number) => {
     const selected = products.find((p) => p.id === id);
@@ -123,9 +130,9 @@ export default function QuotationForm() {
           viewBox="0 0 24 24"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             d="M6 6a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a3 3 0 0 1-3 3H5a1 1 0 1 0 0 2h1a5 5 0 0 0 5-5V8a2 2 0 0 0-2-2H6Zm9 0a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a3 3 0 0 1-3 3h-1a1 1 0 1 0 0 2h1a5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3Z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           />
         </svg>
       </div>
@@ -216,30 +223,41 @@ export default function QuotationForm() {
                 <p className="text-gray-600">₱{product.price}</p>
               </div>
 
-              <div className="w-full border rounded-xl border-gray-300 bg-blue-500 flex justify-between items-center">
+              <div className="w-full border-y rounded-b-xl m-0 border-gray-300 bg-blue-500 flex justify-between items-center">
                 <button
                   type="button"
-                  className="text-3xl rounded-sm cursor-pointer bg-blue-500 text-white text-center w-full"
-                >
-                  +
-                </button>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="Qty"
-                  className="text-center p-1 bg-white w-full h-full"
-                  onChange={(e) =>
-                    handleProductChange(
-                      product.id,
-                      parseInt(e.target.value) || 0
-                    )
-                  }
-                />
-                <button
-                  type="button"
+                  onClick={() => {
+                    const currentQty = quantities[product.id] || 0;
+                    const newQty = Math.max(currentQty - 1, 0); // Don't go below 0
+                    handleQuantityChange(product.id, newQty);
+                  }}
                   className="text-3xl rounded-sm cursor-pointer bg-blue-500 text-white text-center w-full"
                 >
                   -
+                </button>
+
+                <input
+                  type="number"
+                  min={0}
+                  value={quantities[product.id] || 0}
+                  placeholder="Qty"
+                  className="text-center p-1 bg-white w-full h-full"
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    handleQuantityChange(product.id, value);
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const currentQty = quantities[product.id] || 0;
+                    const newQty = currentQty + 1;
+                    handleQuantityChange(product.id, newQty);
+                  }}
+                  className="text-3xl rounded-sm cursor-pointer bg-blue-500 text-white text-center w-full"
+                >
+                  +
                 </button>
               </div>
             </div>

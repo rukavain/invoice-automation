@@ -6,7 +6,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="Poppins flex flex-col justify-start items-start w-full h-full max-w-[1700px]">
+    <main className=" flex flex-col justify-start items-start w-full h-full max-w-[1700px]">
       <Navbar />
       <div className="flex justify-start items-start h-full">
         <Category />

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, DM_Sans } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,6 +13,12 @@ const poppins = Poppins({
   display: "swap",
 });
 
+const dmsans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`antialiased ${poppins.className} flex flex-col justify-center items-center`}
+        className={`antialiased ${dmsans.className} flex flex-col justify-center items-center`}
       >
         {children}
       </body>
