@@ -6,6 +6,7 @@ export type Product = {
   price: number;
   image: string;
   description?: string;
+  onhand_quantity?: number;
 };
 
 export function useProducts() {
@@ -25,6 +26,7 @@ export function useProducts() {
           image: item.Image,
           price: item["Sales Price"],
           description: item["Sales Description"],
+          onhand_quantity: item["On Hand Quantity"],
         }));
         setProducts(formatted);
       } catch (err: any) {
