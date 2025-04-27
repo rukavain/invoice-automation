@@ -2,10 +2,13 @@
 import { useState } from "react";
 import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -192,17 +195,7 @@ export default function QuotationForm() {
               className="flex shadow-lg flex-col justify-between items-center gap-4  border border-gray-300 rounded-lg  w-full max-w-xs h-[390px]" // fixed height
             >
               <Dialog>
-                <DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Are you absolutely sure?</DialogTitle>
-                      <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                      </DialogDescription>
-                    </DialogHeader>
-                  </DialogContent>
+                <DialogTrigger asChild>
                   <div className="h-64 w-full cursor-pointer">
                     <Image
                       src={product.image}
@@ -213,6 +206,20 @@ export default function QuotationForm() {
                     />
                   </div>
                 </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>{product.name}</DialogTitle>
+                    <DialogTitle>₱ {product.price}</DialogTitle>
+                    <DialogDescription>{product.description}</DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button type="button" variant="secondary">
+                        Close
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
               </Dialog>
               <div className="w-full flex-col justify-start items-start gap-5 p-2">
                 {/* <div className="flex justify-between items-center">

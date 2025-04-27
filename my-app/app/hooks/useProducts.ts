@@ -7,6 +7,11 @@ export type Product = {
   image: string;
   description?: string;
   onhand_quantity?: number;
+  internalReference?: string | false; // It can be `false` in your data
+  barcode?: string | false;
+  cost?: number;
+  categories?: string[];
+  average_rating?: number | null;
 };
 
 export function useProducts() {
@@ -27,7 +32,13 @@ export function useProducts() {
           price: item["Sales Price"],
           description: item["Sales Description"],
           onhand_quantity: item["On Hand Quantity"],
+          internalReference: item["Internal Reference"],
+          barcode: item["Barcode"],
+          cost: item["Cost"],
+          categories: item["Ecommerce Categories"],
+          average_rating: item["average_rating"],
         }));
+
         setProducts(formatted);
       } catch (err: any) {
         setError("Failed to load products");
