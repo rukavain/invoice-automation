@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
+import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -76,7 +77,7 @@ export default function QuotationForm() {
             product_name: selected.name,
             price: selected.price,
             description: selected.description,
-            onhand_quantity: selected.onhand_quantity,
+            onhand_quantity: selected.onhand_quantity ?? 0, // <== FIX HERE
             image: selected.image,
           },
         ];
@@ -230,18 +231,25 @@ export default function QuotationForm() {
                 <p className="text-gray-600">₱{product.price}</p>
               </div>
 
-              <div className="w-full border-y rounded-b-xl m-0 border-gray-300 bg-blue-500 flex justify-between items-center">
-                <button
+              <div className="w-full  rounded-b-xl m-0 border-gray-300 flex justify-between items-center">
+                <Button
                   type="button"
+                  className=""
                   onClick={() => {
                     const currentQty = quantities[product.id] || 0;
                     const newQty = Math.max(currentQty - 1, 0); // Don't go below 0
                     handleQuantityChange(product.id, newQty);
                   }}
+                  variant="secondary"
+                >
+                  <Minus />
+                </Button>
+                {/* <button
+                  type="button"
                   className="text-3xl rounded-sm cursor-pointer bg-blue-500 text-white text-center w-full"
                 >
                   -
-                </button>
+                </button> */}
 
                 <input
                   type="number"
@@ -255,7 +263,7 @@ export default function QuotationForm() {
                   }}
                 />
 
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {
                     const currentQty = quantities[product.id] || 0;
@@ -264,8 +272,21 @@ export default function QuotationForm() {
                   }}
                   className="text-3xl rounded-sm cursor-pointer bg-blue-500 text-white text-center w-full"
                 >
-                  +
-                </button>
+                  <Plus />
+                  
+                </button> */}
+                <Button
+                  type="button"
+                  className=""
+                  onClick={() => {
+                    const currentQty = quantities[product.id] || 0;
+                    const newQty = Math.max(currentQty + 1, 0); // Don't go below 0
+                    handleQuantityChange(product.id, newQty);
+                  }}
+                  variant="secondary"
+                >
+                  <Plus />
+                </Button>
               </div>
             </div>
           ))}
