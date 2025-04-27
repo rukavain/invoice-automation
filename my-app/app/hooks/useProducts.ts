@@ -7,7 +7,7 @@ export type Product = {
   image: string;
   description?: string;
   onhand_quantity?: number;
-  internalReference?: string | false; // It can be `false` in your data
+  internalReference?: string | false;
   barcode?: string | false;
   cost?: number;
   categories?: string[];

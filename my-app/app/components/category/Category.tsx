@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+
 const categories = [
   "All Products",
   "Botulinum Toxin",
@@ -28,7 +29,11 @@ const categories = [
   "Easethetics Consumable",
 ];
 
-const Category = () => {
+type CategoryProps = {
+  onSelectCategory: (category: string) => void;
+};
+
+const Category = ({ onSelectCategory }: CategoryProps) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative flex flex-col gap-2 min-w- z-50 bg-white p-2 rounded-md shadow-lg border border-gray-300">
@@ -43,6 +48,10 @@ const Category = () => {
           {categories.map((category, index) => (
             <div
               key={index}
+              onClick={() => {
+                onSelectCategory(category);
+                setOpen(false);
+              }}
               className="flex hover:bg-gray-200 p-2 rounded-sm border-b py-2 cursor-pointer justify-start items-center gap-2"
             >
               <label
