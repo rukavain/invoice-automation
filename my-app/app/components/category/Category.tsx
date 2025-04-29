@@ -44,7 +44,7 @@ const Category = ({ onSelectCategory }: CategoryProps) => {
         Categories
       </h1>
       {open && (
-        <div className="top-12 left-0 border absolute min-w-max bg-white p-4 text-left rounded-md shadow-lg">
+        <div className="top-12 right-0 border absolute min-w-max max-lg:min-w-min  bg-white p-4 text-left rounded-md shadow-lg">
           {categories.map((category, index) => (
             <div
               key={index}

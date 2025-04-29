@@ -4,6 +4,8 @@ import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useForm, SubmitHandler } from "react-hook-form";
+
 import {
   Dialog,
   DialogClose,
@@ -15,6 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Navbar from "../navbar/Navbar";
+import { toast } from "sonner";
+import SubmitButton from "../button/SubmitButton";
 
 type FormProduct = {
   id: number;
@@ -33,6 +37,20 @@ type FormData = {
   products: FormProduct[];
 };
 
+type Inputs = {
+  id: number;
+  quantity: number;
+  product_name: string;
+  price: number;
+  description?: string;
+  onhand_quantity: number;
+  image: string;
+  name: string;
+  email: string;
+  message: string;
+  products: FormProduct[];
+};
+
 export default function QuotationForm() {
   const { products, loading, error } = useProducts();
   const [quantities, setQuantities] = useState<{ [productId: number]: number }>(
@@ -45,6 +63,7 @@ export default function QuotationForm() {
     message: "",
     products: [],
   });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
 
@@ -109,9 +128,21 @@ export default function QuotationForm() {
       body: JSON.stringify(formData),
     });
     if (res.ok) {
-      alert("Quotation submitted!");
+      toast("Quotation successfully submitted!", {
+        description: `Quotation was sent to ${formData.email}`,
+        action: {
+          label: "Close",
+          onClick: () => console.log(""),
+        },
+      });
     } else {
-      alert("Failed to submit");
+      toast("Failed to submit quotation request.", {
+        description: `Quotation failed to send at ${formData.email}`,
+        action: {
+          label: "Close",
+          onClick: () => console.log(""),
+        },
+      });
     }
   };
 
@@ -119,17 +150,16 @@ export default function QuotationForm() {
 
   if (loading)
     return (
-      <div className=" bg-white h-full w-full flex justify-center items-center flex-col gap-4">
+      <div className=" bg-white h-svh w-full flex justify-center items-center flex-col gap-4">
         <div className="flex bg-white flex-col justify-center items-center">
-          <div className="flex justify-center items-center gap-4 ">
-            {/* <Image
-              src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
-              alt="Easemart Logo"
-              width={300}
-              height={300}
-            /> */}
-          </div>
-          <Image width={100} height={100} alt="Loading" src={"/loading.gif"} />
+          <Image
+            src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
+            alt="Easemart Logo"
+            width={220}
+            className="min-w-68 max-lg:min-w-32"
+            height={220}
+          />
+          <Image width={300} height={300} alt="Loading" src={"/loading.gif"} />
         </div>
       </div>
     );
@@ -140,11 +170,18 @@ export default function QuotationForm() {
         onSearch={setSearchQuery}
         onSelectCategory={setSelectedCategory}
       />
-      <form onSubmit={handleSubmit} className="relative  w-full flex">
+      <p className="text-center text-2xl font-bold my-6">{selectedCategory}</p>
+      <form
+        onSubmit={handleSubmit}
+        className="relative flex justify-center items-center w-full "
+      >
         <div
           onClick={() => setOpen(!open)}
-          className="py-4 px-4 fixed bottom-12 right-12 flex justify-center items-center cursor-pointer  rounded-full bg-blue-500 "
+          className="py-4 px-4 fixed bottom-12 right-12 flex group justify-center items-center cursor-pointer delay-200  transition-all  rounded-full bg-blue-500 "
         >
+          <p className="bg-white -top-7 right-0 min-w-max absolute hidden group-hover:block  transition-all rounded-md text-sm  p-2 shadow-lg ">
+            Request Quotation
+          </p>
           <svg
             className="w-8 h-8 text-white dark:text-white"
             aria-hidden="true"
@@ -168,6 +205,7 @@ export default function QuotationForm() {
               <input
                 type="text"
                 placeholder="Name"
+                value={formData.name}
                 className="border p-2 w-full "
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -177,6 +215,7 @@ export default function QuotationForm() {
               <input
                 type="email"
                 placeholder="Email"
+                value={formData.email}
                 className="border p-2 w-full my-2"
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -186,17 +225,17 @@ export default function QuotationForm() {
               <textarea
                 placeholder="Message"
                 className="border p-2 w-full "
+                value={formData.message}
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
                 }
               />
               <div className="">
-                <button
+                <SubmitButton
                   type="submit"
                   className="bg-blue-500 text-white p-2 cursor-pointer rounded"
-                >
-                  Submit
-                </button>
+                  label="Submit"
+                />
                 <button
                   type="button"
                   onClick={() => setOpen(!open)}
@@ -208,23 +247,23 @@ export default function QuotationForm() {
             </div>
           </div>
         )}
-        <div className="">
+        <div className=" max-lg:flex max-lg:flex-wrap max-lg:justify-center max-lg:items-center">
           {/* <p className="font-semibold text-xl">Products</p> */}
-          <div className="flex flex-wrap justify-start items-start gap-3">
+          <div className="flex flex-wrap justify-center items-center max-lg:flex max-lg:flex-wrap max-lg:justify-center max-lg:items-center  gap-3">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex shadow-lg flex-col justify-between items-center gap-4  border border-gray-300 rounded-lg  w-full max-w-xs h-[390px]" // fixed height
+                className="flex shadow-lg flex-col justify-between items-center gap-4  border border-gray-300 rounded-lg  w-full max-w-[300px] h-[390px] max-lg:min-h-max max-lg:max-w-[120px]" // fixed height
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="h-64 w-full cursor-pointer">
+                    <div className="h-64 max-lg:h-min  w-full cursor-pointer">
                       <Image
                         src={product.image}
                         alt={product.name}
                         width={150}
                         height={150}
-                        className="object-scale-down h-full w-full"
+                        className="max-lg:h-min  object-scale-down h-full w-full"
                       />
                     </div>
                   </DialogTrigger>
@@ -257,10 +296,9 @@ export default function QuotationForm() {
                 <div className="w-full border-y rounded-b-xl m-0 border-gray-300 flex justify-between items-center">
                   <Button
                     type="button"
-                    className=""
                     onClick={() => {
                       const currentQty = quantities[product.id] || 0;
-                      const newQty = Math.max(currentQty - 1, 0); // Don't go below 0
+                      const newQty = Math.max(currentQty - 1, 0);
                       handleQuantityChange(product.id, newQty);
                     }}
                     variant="secondary"

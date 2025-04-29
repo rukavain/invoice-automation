@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "EasemartPH | Quotation",
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`antialiased ${dmsans.className} flex flex-col justify-center items-center`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
