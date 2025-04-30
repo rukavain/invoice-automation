@@ -90,7 +90,7 @@ export async function POST(req: Request) {
       >
         <div style="width: 100%; position: relative; margin: 15px 0">
           <img
-            src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
+            src="https://easemart.ph/web/image/website/1/logo/"
             alt="Logo"
             height="100"
             style="position: absolute; min-width: 100px; min-height: 100px"
@@ -105,9 +105,6 @@ export async function POST(req: Request) {
           <div>
             <p style="font-size: 1.25rem; margin: 0">${name}</p>
           </div>
-          <div>
-            <p style="font-size: 1.25rem; margin: 0">note: ${message}</p>
-          </div>
           <div style="font-size: 0.875rem">
             <div style="margin: 10px 0">
               <p style="margin: 0; font-weight: bold">Quote #</p>
@@ -120,6 +117,10 @@ export async function POST(req: Request) {
             <div style="margin: 10px 0">
               <p style="margin: 0; font-weight: bold">Due date</p>
               <p style="margin: 0">${dueDate}</p>
+            </div>
+            <div style="margin: 10px 0">
+              <p style="margin: 0; font-weight: bold">Message</p>
+              <p style="margin: 0">${message}</p>
             </div>
           </div>
         </div>
@@ -162,7 +163,7 @@ export async function POST(req: Request) {
       
         <footer style="padding: 2rem 1rem; text-align: center; background-color: #60a5fa; color: white;">
           <img
-            src="https://easemart.ph/web/image/website/1/logo/Easemart?unique=2fba680"
+            src="https://easemart.ph/web/image/website/1/logo/"
             alt="Logo"
             height="40"
             style="position: absolute; min-width: 100px; min-height: 100px"

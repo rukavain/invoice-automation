@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useProducts } from "@/app/hooks/useProducts";
 import Image from "next/image";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Divide } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import Navbar from "../navbar/Navbar";
 import { toast } from "sonner";
-import SubmitButton from "../button/SubmitButton";
 
 type FormProduct = {
   id: number;
@@ -30,21 +29,14 @@ type FormProduct = {
   image: string;
 };
 
-type FormData = {
-  name: string;
-  email: string;
-  message: string;
-  products: FormProduct[];
-};
+// type FormData = {
+//   name: string;
+//   email: string;
+//   message: string;
+//   products: FormProduct[];
+// };
 
 type Inputs = {
-  id: number;
-  quantity: number;
-  product_name: string;
-  price: number;
-  description?: string;
-  onhand_quantity: number;
-  image: string;
   name: string;
   email: string;
   message: string;
@@ -57,12 +49,18 @@ export default function QuotationForm() {
     {}
   );
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<Inputs>({
     name: "",
     email: "",
     message: "",
     products: [],
   });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<Inputs>();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
@@ -88,48 +86,62 @@ export default function QuotationForm() {
     if (!selected) return;
 
     setFormData((prevFormData) => {
+      // First, check if product already exists in formData
       const existingProductIndex = prevFormData.products.findIndex(
         (p: any) => p.id === id
       );
 
-      let updatedProducts;
+      let updatedProducts = [...prevFormData.products];
 
-      if (existingProductIndex !== -1) {
-        updatedProducts = [...prevFormData.products];
-        updatedProducts[existingProductIndex] = {
-          ...updatedProducts[existingProductIndex],
-          quantity,
-        };
+      if (quantity === 0) {
+        // If quantity is 0, REMOVE the product from the list
+        updatedProducts = updatedProducts.filter((p) => p.id !== id);
       } else {
-        // Add new product if it doesn't exist
-        updatedProducts = [
-          ...prevFormData.products,
-          {
+        if (existingProductIndex !== -1) {
+          // If it exists, update the quantity
+          updatedProducts[existingProductIndex] = {
+            ...updatedProducts[existingProductIndex],
+            quantity,
+          };
+        } else {
+          // Otherwise, ADD the product
+          updatedProducts.push({
             id: selected.id,
             quantity,
             product_name: selected.name,
             price: selected.price,
             description: selected.description,
-            onhand_quantity: selected.onhand_quantity ?? 0, // <== FIX HERE
+            onhand_quantity: selected.onhand_quantity ?? 0,
             image: selected.image,
-          },
-        ];
+          });
+        }
       }
 
       return { ...prevFormData, products: updatedProducts };
     });
   };
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const payload = {
+      name: data.name,
+      email: data.email,
+      message: data.message,
+      products: formData.products,
+    };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
     const res = await fetch(`/api/quotation-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(payload),
     });
+    if (formData.products.length === 0) {
+      toast("No products selected.", {
+        description: "Please select at least one product.",
+      });
+      return;
+    }
     if (res.ok) {
       toast("Quotation successfully submitted!", {
-        description: `Quotation was sent to ${formData.email}`,
+        description: `Quotation was sent to ${payload.email}`,
         action: {
           label: "Close",
           onClick: () => console.log(""),
@@ -137,7 +149,7 @@ export default function QuotationForm() {
       });
     } else {
       toast("Failed to submit quotation request.", {
-        description: `Quotation failed to send at ${formData.email}`,
+        description: `Quotation failed to send at ${payload.email}`,
         action: {
           label: "Close",
           onClick: () => console.log(""),
@@ -145,9 +157,6 @@ export default function QuotationForm() {
       });
     }
   };
-
-  console.log("product:", products);
-
   if (loading)
     return (
       <div className=" bg-white h-svh w-full flex justify-center items-center flex-col gap-4">
@@ -172,7 +181,7 @@ export default function QuotationForm() {
       />
       <p className="text-center text-2xl font-bold my-6">{selectedCategory}</p>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="relative flex justify-center items-center w-full "
       >
         <div
@@ -200,42 +209,46 @@ export default function QuotationForm() {
         </div>
         {open && (
           <div className="fixed border-2 border-gray-400 bottom-4 right-4  bg-white rounded-lg p-5 shadow-xl gap-2 flex flex-col justify-start items-start w-full max-w-md">
-            <div className="min-w-[300px] h-full focus:outline-none">
+            <div className="min-w-[300px] max-lg:min-w-[180px] h-full focus:outline-none">
               <p className="font-semibold text-xl mb-4">Submit Quotation</p>
               <input
                 type="text"
                 placeholder="Name"
-                value={formData.name}
+                {...register("name", {
+                  required: {
+                    value: true,
+                    message: "Name is required.",
+                  },
+                })}
                 className="border p-2 w-full "
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
               />
               <input
                 type="email"
                 placeholder="Email"
-                value={formData.email}
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is required.",
+                  },
+                })}
                 className="border p-2 w-full my-2"
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                required
               />
               <textarea
                 placeholder="Message"
-                className="border p-2 w-full "
-                value={formData.message}
-                onChange={(e) =>
-                  setFormData({ ...formData, message: e.target.value })
-                }
+                className="border p-2 w-full"
+                {...register("message")}
               />
-              <div className="">
-                <SubmitButton
+              {errors.name && <span>{errors.name.message}</span>}
+              {errors.email && <span>{errors.email.message}</span>}
+              <div className="flex justify-start items-start w-full">
+                <button
                   type="submit"
-                  className="bg-blue-500 text-white p-2 cursor-pointer rounded"
-                  label="Submit"
-                />
+                  className={`bg-blue-500 text-white p-2 cursor-pointer rounded ${
+                    isSubmitting && "opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
                 <button
                   type="button"
                   onClick={() => setOpen(!open)}
@@ -248,7 +261,6 @@ export default function QuotationForm() {
           </div>
         )}
         <div className=" max-lg:flex max-lg:flex-wrap max-lg:justify-center max-lg:items-center">
-          {/* <p className="font-semibold text-xl">Products</p> */}
           <div className="flex flex-wrap justify-center items-center max-lg:flex max-lg:flex-wrap max-lg:justify-center max-lg:items-center  gap-3">
             {filteredProducts.map((product) => (
               <div
