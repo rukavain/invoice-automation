@@ -121,11 +121,30 @@ export default function QuotationForm() {
     });
   };
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const selectedProducts = products
+      .filter((product) => quantities[product.id] > 0)
+      .map((product) => ({
+        id: product.id,
+        quantity: quantities[product.id],
+        product_name: product.name,
+        price: product.price,
+        description: product.description,
+        onhand_quantity: product.onhand_quantity ?? 0,
+        image: product.image,
+      }));
+
+    if (selectedProducts.length === 0) {
+      toast("No products selected.", {
+        description: "Please select at least one product.",
+      });
+      return;
+    }
+
     const payload = {
       name: data.name,
       email: data.email,
       message: data.message,
-      products: formData.products,
+      products: selectedProducts,
     };
 
     const res = await fetch(`/api/quotation-email`, {
@@ -133,12 +152,7 @@ export default function QuotationForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (formData.products.length === 0) {
-      toast("No products selected.", {
-        description: "Please select at least one product.",
-      });
-      return;
-    }
+
     if (res.ok) {
       toast("Quotation successfully submitted!", {
         description: `Quotation was sent to ${payload.email}`,
@@ -149,7 +163,7 @@ export default function QuotationForm() {
       });
     } else {
       toast("Failed to submit quotation request.", {
-        description: `Quotation failed to send at ${payload.email}`,
+        description: `Quotation failed to send to ${payload.email}`,
         action: {
           label: "Close",
           onClick: () => console.log(""),
@@ -157,6 +171,7 @@ export default function QuotationForm() {
       });
     }
   };
+
   if (loading)
     return (
       <div className=" bg-white h-svh w-full flex justify-center items-center flex-col gap-4">
